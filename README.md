@@ -19,7 +19,7 @@ write something like this:
 
 The text after the bullet '-' is a list of all unwanted tags for each query.
 
-After writing your queries, you need to add an Flickr API key in the .env
+After writing your queries, you need to add a Flickr API key in the .env
 file that you can get in https://www.flickr.com/services/api/, alongside the API_KEY you need to change your model name, and the size of the dataset for each class.
 
 Lastly, you need to download the libraries. From the root project in your python environment run:
@@ -32,7 +32,8 @@ Lastly, you need to download the libraries. From the root project in your python
 To run the download scripts run the 'script' file, for instance, to download from Flickr Database use (you can do the same for the bing_script):
 
          
-            $  python flickr_dataset.py
+            $  python flickr_script.py
+            $  python bing_script.py
 
         
 
@@ -42,5 +43,5 @@ Done! You're now downloading the images and can generate a dataset for an Image 
 - [x] Documentação Readme Download
 - [ ] Documentação Readme Model Creation
 - [x] Implementação Leitura queries.txt
-- [] Implementação model
-- [] Interface de utilização
+- [ ] Implementação model
+- [ ] Interface de utilização
