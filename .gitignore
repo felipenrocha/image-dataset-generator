@@ -1,4 +1,6 @@
 dataset_bing/
 dataset_flickr/
 datasets/
+# model name:
+cats and dogs/
 .env
