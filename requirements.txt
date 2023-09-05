@@ -1,0 +1,9 @@
+scikit-learn
+tensorflow
+keras
+flickrapi
+PIL
+dotenv
+bing_image_downloader
+matplotlib
+seaborn

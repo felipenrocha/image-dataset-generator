@@ -1,12 +1,5 @@
-# queries starts with + list
-# each + represents a class to be classified 
-# unwanted tags starts with -
+# each + represents a class to be classified  (and the query to each database)
+# unwanted tags starts with - (only for flickr)
 
-# .ie:
-# + cats animal pet
-# + dogs animal pet
-+ cats
-+ dogs
--people
--photographer
--family
++ (cats animal pet cat) -(people photographer family dog dogs mouse fox rat mice rabbit bunny guinea-pig guineapig wolf squirrel monkey woman women men man) 
++ (dogs animal pet dog) -(people photographer family cat cats mouse fox rat mice rabbit bunny guinea-pig guineapig woman women men man) 
