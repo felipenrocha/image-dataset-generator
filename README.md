@@ -40,7 +40,8 @@ Done! You're now downloading the images and can generate a dataset for an Image 
 
 #### TODO:
 - [x] Documentação Readme Download
-- [ ] Documentação Readme Model Creation
+- [x] Tags Indesejadas retiradas
 - [x] Implementação Leitura queries.txt
-- [] Implementação model
-- [] Interface de utilização
+- [ ] Threading download Flickr
+- [ ] Implementação modo geotags (recolher lat, lng => salvar pais em csv (sera utilizado dps no modelo))
+- [ ] Interface de utilização

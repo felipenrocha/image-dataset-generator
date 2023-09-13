@@ -4,7 +4,7 @@ from bing_image_downloader import downloader
 import threading
 import os
 from dotenv.main import load_dotenv
-
+from query_reader import Queries
 load_dotenv()
 
 MODEL_NAME = os.environ['MODEL_NAME']
@@ -13,11 +13,7 @@ DATASET_SIZE = int(os.environ['DATASET_SIZE'])
 # it also uses threading, all queries are being downloaded at the sime time so you can just ctrl c if its taking too much time;
 
 
-queries = [
-
-    'dog animal',
-    'cat animal'
-]
+queries = Queries().getQueries()
 
 
 threads = list()
@@ -31,9 +27,8 @@ class BingScript:
 
     def run(self):
         for query in queries:
-
             self.threads.append(threading.Thread(
-                target=self.download, args=(query,)))     
+                target=self.download, args=(query['name'],)))     
         print(self.threads)     
         for thread in self.threads:
             thread.start()

@@ -45,21 +45,21 @@ def main():
 
             # training split files
             start_index = 0
-            end_index = int(folder_len * 0.75)
+            end_index = int(folder_len * 0.8)
             dst_folder = output_folder + '/seg_train/' + str(class_index)
             copy_file_range(class_path, dst_folder, start_index, end_index)
 
             # test split files
             start_index = end_index + 1
-            end_index = int(folder_len * 0.95)
+            end_index = folder_len
             dst_folder = output_folder + '/seg_test/' + str(class_index)
             copy_file_range(class_path, dst_folder, start_index, end_index)
 
-            # pred split files
-            start_index = end_index + 1
-            end_index = folder_len
-            dst_folder = output_folder + '/seg_pred'
-            copy_file_range(class_path, dst_folder, start_index, end_index)
+            # # pred split files
+            # start_index = end_index + 1
+            # end_index = folder_len
+            # dst_folder = output_folder + '/seg_pred'
+            # copy_file_range(class_path, dst_folder, start_index, end_index)
 
             class_index += 1
 

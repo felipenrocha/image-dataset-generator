@@ -18,6 +18,7 @@ class Queries:
             query = self.getQuery(line)
             #unwanted tags
             un_tags = self.getUnwantedTags(line)
+            un_tags = list(filter(lambda x: x != '', un_tags)) # remove empty strings
             query = {'name': query, 'unwanted_tags': un_tags}
             self.queries.append(query)
         print(self.queries)

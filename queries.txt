@@ -1,5 +1,12 @@
 # each + represents a class to be classified  (and the query to each database)
 # unwanted tags starts with - (only for flickr)
 
-+ (cats animal pet cat) -(people photographer family dog dogs mouse fox rat mice rabbit bunny guinea-pig guineapig wolf squirrel monkey woman women men man) 
-+ (dogs animal pet dog) -(people photographer family cat cats mouse fox rat mice rabbit bunny guinea-pig guineapig woman women men man) 
+# + (cats animal pet cat) -(people photographer family dog dogs mouse fox rat mice rabbit bunny guinea-pig guineapig wolf squirrel monkey woman women men man) 
+# + (dogs animal pet dog) -(people photographer family cat cats mouse fox rat mice rabbit bunny guinea-pig guineapig woman women men man) 
+
+
++ (pizza food) -( people photographer photography pool salad hamburguer sushi party family actor mural art public restaurant onion hotdog fries )
++  (hamburger food) -( interior  people photographer photography pool pizza salad sushi party family actor mural art public restaurant onion hotdog fries )
++ (sushi food) -(lightroom photographer photography pool pizza salad hamburguer party family actor mural art public restaurant onion hotdog fries )
++ (salad food) -(people photographer photography pool pizza sushi hamburger  party family actor mural art public restaurant onion hotdog fries )
+

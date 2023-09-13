@@ -46,9 +46,9 @@ def main():
     datagen = ImageDataGenerator(rescale=1.0/255.0)
 
     train_it = datagen.flow_from_directory(train_dataset_path,
-                                           class_mode='binary', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
+                                           class_mode='categorical', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
     test_it = datagen.flow_from_directory(validation_dataset_path,
-                                          class_mode='binary', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
+                                          class_mode='categorical', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
     labels = {value: key for key,
               value in train_it.class_indices.items()}
 
@@ -60,43 +60,54 @@ def main():
     datagen = ImageDataGenerator(rescale=1.0/255.0)
     # prepare iterator
     train_it = datagen.flow_from_directory(train_dataset_path,
-                                           class_mode='binary', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
+                                           class_mode='categorical', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
     test_it = datagen.flow_from_directory(validation_dataset_path,
-                                          class_mode='binary', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
+                                          class_mode='categorical', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
     # fit model
     history = model.fit(train_it,
-                        validation_data=test_it, epochs=20, verbose=1)
+                        validation_data=test_it, epochs=50, verbose=1)
     # evaluate model
-  
-    model.save('../../datasets/models/' + MODEL_NAME)
-    hist_df = pd.DataFrame(history.history) 
-    hist_csv_file = '../../datasets/history.csv'
+
+    model.save('../../datasets/models/' + MODEL_NAME + '/')
+    hist_df = pd.DataFrame(history.history)
+
+    hist_csv_file = '../../datasets/history' + MODEL_NAME + '.csv'
     with open(hist_csv_file, mode='w') as f:
         hist_df.to_csv(f)
 
+
 def create_model():
-    model = Sequential()
-    model.add(Conv2D(32, (3, 3), activation='relu',
-              kernel_initializer='he_uniform', padding='same', input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)))
-    model.add(MaxPooling2D((2, 2)))
-    model.add(Dropout(0.2))
-    model.add(Conv2D(64, (3, 3), activation='relu',
-              kernel_initializer='he_uniform', padding='same'))
-    model.add(MaxPooling2D((2, 2)))
-    model.add(Dropout(0.2))
-    model.add(Conv2D(128, (3, 3), activation='relu',
-              kernel_initializer='he_uniform', padding='same'))
-    model.add(MaxPooling2D((2, 2)))
-    model.add(Dropout(0.2))
-    model.add(Flatten())
-    model.add(Dense(128, activation='relu', kernel_initializer='he_uniform'))
-    model.add(Dropout(0.5))
-    model.add(Dense(1, activation='sigmoid'))
-    # compile model
-    opt = SGD(lr=0.001, momentum=0.9)
-    model.compile(optimizer=opt, loss='binary_crossentropy',
-                  metrics=['accuracy'])
+    # model for multiple classes (labels)
+    model = Sequential([
+        Conv2D(filters=128, kernel_size=(5, 5), padding='valid',
+               input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)),
+        Activation('relu'),
+        MaxPooling2D(pool_size=(2, 2)),
+        BatchNormalization(),
+
+        Conv2D(filters=64, kernel_size=(3, 3), padding='valid',
+               kernel_regularizer=l2(0.00005)),
+        Activation('relu'),
+        MaxPooling2D(pool_size=(2, 2)),
+        BatchNormalization(),
+
+        Conv2D(filters=32, kernel_size=(3, 3), padding='valid',
+               kernel_regularizer=l2(0.00005)),
+        Activation('relu'),
+        MaxPooling2D(pool_size=(2, 2)),
+        BatchNormalization(),
+
+        Flatten(),
+
+        Dense(units=256, activation='relu'),
+        Dropout(0.5),
+        Dense(units=num_classes, activation='softmax')
+    ])
+    opt = Adam(learning_rate=0.001)
+    model.compile(optimizer=opt, loss=CategoricalCrossentropy(), metrics=['accuracy'])
     return model
+
+
 
 
 if __name__ == "__main__":
