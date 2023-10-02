@@ -1,6 +1,9 @@
 # module to get querie values
+import os
 
-with open("../../queries.txt", 'r') as file:
+BASE_PATH = os.getcwd() + '\\'
+
+with open(BASE_PATH + "queries.txt", 'r') as file:
     data = file.readlines()
 
 

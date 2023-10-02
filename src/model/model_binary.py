@@ -13,7 +13,7 @@ from keras.optimizers import SGD
 
 import tensorflow as tf
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Activation, BatchNormalization, GlobalAveragePooling2D, Conv2D, Dense, Dropout, Flatten, MaxPooling2D
+from tensorflow.keras.layers import Activation,MaxPool2D, BatchNormalization, GlobalAveragePooling2D, Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import CategoricalCrossentropy, SparseCategoricalCrossentropy
@@ -49,8 +49,8 @@ num_classes = len(os.listdir(train_dataset_path))
 print('num_classes',num_classes)
 # resize images to 1/3:
 
-IMG_WIDTH = 128
-IMG_HEIGHT = 128
+IMG_WIDTH = 256
+IMG_HEIGHT = 256
 
 # SIZE OF BATCH
 
@@ -62,9 +62,9 @@ def main():
     datagen = ImageDataGenerator(rescale=1.0/255.0)
 
     train_it = datagen.flow_from_directory(train_dataset_path,
-                                           class_mode='categorical', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
+                                           class_mode='binary', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
     test_it = datagen.flow_from_directory(validation_dataset_path,
-                                          class_mode='categorical', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
+                                          class_mode='binary', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
     labels = {value: key for key,
               value in train_it.class_indices.items()}
 
@@ -73,15 +73,17 @@ def main():
         print(f"{key} : {value}")
 
     model = create_model()
-    datagen = ImageDataGenerator(rescale=1.0/255.0)
-    # prepare iterator
-    train_it = datagen.flow_from_directory(train_dataset_path,
-                                           class_mode='categorical', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
-    test_it = datagen.flow_from_directory(validation_dataset_path,
-                                          class_mode='categorical', batch_size=BATCH_SIZE, target_size=(IMG_HEIGHT, IMG_WIDTH))
+  
+    
+    model.compile(optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])
+
     # fit model
-    history = model.fit(train_it,
-                        validation_data=test_it, epochs=5, verbose=1)
+    history = model.fit_generator(train_it,
+         steps_per_epoch = 250,
+         epochs = 50,
+         validation_data = test_it
+       
+         )
     # evaluate model
 
     model.save(BASE_PATH + 'datasets\models\\' + MODEL_NAME + '\\')
@@ -94,35 +96,33 @@ def main():
 
 def create_model():
     # model for multiple classes (labels)
-    model = Sequential([
-        Conv2D(filters=128, kernel_size=(5, 5), padding='valid',
-               input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)),
-        Activation('relu'),
-        MaxPooling2D(pool_size=(2, 2)),
-        BatchNormalization(),
+    model = Sequential()
+    # Convolutional layer and maxpool layer 1
+    model.add(Conv2D(32,(3,3),activation='relu',input_shape=(150,150,3)))
+    model.add(MaxPool2D(2,2))
 
-        Conv2D(filters=64, kernel_size=(3, 3), padding='valid',
-               kernel_regularizer=l2(0.00005)),
-        Activation('relu'),
-        MaxPooling2D(pool_size=(2, 2)),
-        BatchNormalization(),
+    # Convolutional layer and maxpool layer 2
+    model.add(Conv2D(64,(3,3),activation='relu'))
+    model.add(MaxPool2D(2,2))
 
-        Conv2D(filters=32, kernel_size=(3, 3), padding='valid',
-               kernel_regularizer=l2(0.00005)),
-        Activation('relu'),
-        MaxPooling2D(pool_size=(2, 2)),
-        BatchNormalization(),
+    # Convolutional layer and maxpool layer 3
+    model.add(Conv2D(128,(3,3),activation='relu'))
+    model.add(MaxPool2D(2,2))
 
-        Flatten(),
+    # Convolutional layer and maxpool layer 4
+    model.add(Conv2D(128,(3,3),activation='relu'))
+    model.add(MaxPool2D(2,2))
 
-        Dense(units=128, activation='relu'),
-        Dropout(0.5),
-        Dense(units=num_classes, activation='softmax')
-    ])
-    opt = Adam(learning_rate=0.001)
-    model.compile(optimizer=opt, loss=CategoricalCrossentropy(), metrics=['accuracy'])
+    # This layer flattens the resulting image array to 1D array
+    model.add(Flatten())
+
+    # Hidden layer with 512 neurons and Rectified Linear Unit activation function 
+    model.add(Dense(512,activation='relu'))
+
+    # Output layer with single neuron which gives 0 for Cat or 1 for Dog 
+    #Here we use sigmoid activation function which makes our model output to lie between 0 and 1
+    model.add(Dense(1,activation='sigmoid'))
     return model
-
 
 
 if __name__ == "__main__":

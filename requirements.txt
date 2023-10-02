@@ -1,9 +1,9 @@
 scikit-learn
-tensorflow
+tensorflow<cd2.11
 keras
 flickrapi
-PIL
-dotenv
+python-dotenv
+opencv-python
 bing_image_downloader
 matplotlib
 seaborn
