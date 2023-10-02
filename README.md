@@ -29,20 +29,28 @@ Lastly, you need to download the libraries. From the root project in your python
 
             
 
-To run the download scripts run the 'script' file, for instance, to download from Flickr Database use (you can do the same for the bing_script):
+To run the download scripts run the 'script' file:
 
          
-            $  python flickr_script.py
-            $  python bing_script.py
+            $  python src/download/flickr_script.py 
+            $  python src/download/bing_script.py
 
         
 
 Done! You're now downloading the images and can generate a dataset for an Image Classifier with ease.
 
+
+You can also activate the geotag mode by passing the -g argument  while running the flickr script (only available for flickr script) this option will add additional data for each photo, its latitude and longitude:
+
+            $  python src/download/flickr_script.py -g
+
+
+
+
 #### TODO:
 - [x] Documentação Readme Download
 - [x] Tags Indesejadas retiradas
 - [x] Implementação Leitura queries.txt
-- [ ] Threading download Flickr
+- [x] Threading download Flickr
 - [ ] Implementação modo geotags (recolher lat, lng => salvar pais em csv (sera utilizado dps no modelo))
 - [ ] Interface de utilização
